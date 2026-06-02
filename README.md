@@ -1,69 +1,185 @@
-# xml-auditoria-automation
+# XML Auditoria Automation
 
-## Automação em Python para Processamento de XMLs de Auditoria
+Automação em Python para processar arquivos XML rígidos e compactos diretamente do Google Drive, extrair dados críticos com XPath, normalizar documentos com `xml.etree.ElementTree`, gerar JSON estruturado e enviar o payload para uma API integrada ao banco de dados e ao frontend.
 
-Este repositório contém um projeto Python desenvolvido para automatizar o processo de auditoria de arquivos XML. A solução integra-se com o Google Drive para localizar e baixar documentos XML, extrai dados cruciais utilizando expressões XPath, permite a alteração ou normalização desses XMLs com `xml.etree.ElementTree`, converte os dados selecionados para o formato JSON e, finalmente, envia o payload resultante para uma API externa. Esta API é responsável por persistir os dados em um banco de dados e alimentar um frontend.
+## Destaque para recrutadores
 
-## Funcionalidades Principais
+Este projeto demonstra competências práticas em automação backend, integração com APIs externas, processamento de documentos XML, estruturação de dados, arquitetura modular, FastAPI e preparação para persistência em banco de dados.
 
-*   **Conectividade com Google Drive**: Autenticação e acesso seguro a arquivos XML armazenados no Google Drive.
-*   **Localização e Download de XMLs**: Capacidade de listar e baixar arquivos XML de pastas específicas no Google Drive.
-*   **Extração de Dados com XPath**: Utilização de expressões XPath para extrair informações específicas e relevantes dos documentos XML.
-*   **Normalização e Transformação de XML**: Manipulação de estruturas XML usando `xml.etree.ElementTree` para normalizar ou alterar dados conforme a necessidade da auditoria.
-*   **Geração de JSON**: Conversão dos dados extraídos e processados para o formato JSON, ideal para consumo por APIs e aplicações web.
-*   **Integração com API Externa**: Envio dos dados JSON para um endpoint de API configurável, que se encarrega de salvar as informações no banco de dados e atualizar o frontend.
+A solução foi pensada para cenários reais onde empresas recebem arquivos XML em massa e precisam auditar, validar, transformar e disponibilizar essas informações para sistemas internos.
 
-## Estrutura do Projeto
+## Fluxo da solução
 
+```txt
+Google Drive
+   ↓
+Busca arquivos XML
+   ↓
+Baixa e processa documentos
+   ↓
+Extrai dados com XPath
+   ↓
+Altera/normaliza XML com ElementTree
+   ↓
+Gera JSON estruturado
+   ↓
+Envia para API FastAPI
+   ↓
+API salva no banco
+   ↓
+Frontend consome os dados
 ```
+
+## Stack utilizada
+
+- Python 3.11+
+- Google Drive API
+- XPath com `lxml`
+- Manipulação XML com `xml.etree.ElementTree`
+- FastAPI
+- Pydantic
+- Requests
+- PostgreSQL/SQL Server ready
+- Arquitetura modular orientada a serviços
+
+## Funcionalidades
+
+- Conexão com Google Drive via Service Account.
+- Busca automática de arquivos `.xml` em uma pasta configurada.
+- Leitura de XMLs compactos, com namespace e estrutura rígida.
+- Extração de dados cruciais usando XPath.
+- Normalização e alteração de XML com `ElementTree`.
+- Conversão dos dados selecionados para JSON.
+- Envio do payload para API REST.
+- API pronta para persistência em banco e integração com frontend.
+- Estrutura segura para credenciais e arquivos sensíveis.
+
+## Estrutura do projeto
+
+```txt
 xml-auditoria-automation/
-├── main.py
+│
+├── api/
+│   └── main.py
+│
+├── src/
+│   ├── main.py
+│   ├── config.py
+│   │
+│   ├── services/
+│   │   ├── google_drive_service.py
+│   │   ├── xml_processor.py
+│   │   └── api_client.py
+│   │
+│   ├── models/
+│   │   └── schemas.py
+│   │
+│   └── utils/
+│       └── logger.py
+│
+├── docs/
+│   ├── arquitetura.md
+│   └── database.sql
+│
+├── .env.example
+├── .gitignore
 ├── requirements.txt
 └── README.md
 ```
 
-*   `main.py`: Contém a lógica principal da automação, incluindo funções para autenticação no Google Drive, manipulação de XML, conversão para JSON e envio para a API.
-*   `requirements.txt`: Lista as dependências Python necessárias para o projeto.
-*   `README.md`: Este arquivo, fornecendo uma visão geral do projeto e instruções.
+## Instalação
 
-## Como Usar
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
 
-### 1. Configuração do Ambiente
+Copie o arquivo de ambiente:
 
-1.  **Clone o repositório**:
-    ```bash
-    git clone https://github.com/tavaresmirako/xml-auditoria-automation.git
-    cd xml-auditoria-automation
-    ```
+```bash
+cp .env.example .env
+```
 
-2.  **Crie um ambiente virtual** (recomendado):
-    ```bash
-    python3 -m venv venv
-    source venv/bin/activate
-    ```
+Configure no `.env`:
 
-3.  **Instale as dependências**:
-    ```bash
-    pip install -r requirements.txt
-    ```
+```env
+GOOGLE_DRIVE_FOLDER_ID=
+GOOGLE_CREDENTIALS_FILE=credentials/service_account.json
+API_ENDPOINT=http://localhost:8000/api/auditoria/xml
+API_TOKEN=token-interno-da-api
+```
 
-### 2. Configuração do Google Drive API
+## Executar a automação
 
-1.  Siga as instruções da documentação do Google para habilitar a Google Drive API e baixar suas `credentials.json`.
-2.  Coloque o arquivo `credentials.json` na raiz do projeto.
+```bash
+python -m src.main
+```
 
-### 3. Execução
+## Executar a API local
 
-1.  **Modifique `main.py`**: Atualize as variáveis `YOUR_GOOGLE_DRIVE_FOLDER_ID` e `http://your-api-endpoint.com/upload` com seus respectivos valores.
-2.  **Execute o script**:
-    ```bash
-    python3 main.py
-    ```
+```bash
+uvicorn api.main:app --reload
+```
 
-## Contribuição
+Documentação interativa:
 
-Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou enviar pull requests.
+```txt
+http://localhost:8000/docs
+```
 
-## Licença
+## Exemplo de payload JSON
 
-Este projeto está licenciado sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes. (O arquivo LICENSE será adicionado posteriormente)
+```json
+{
+  "arquivo": "nota_123.xml",
+  "origem": "GOOGLE_DRIVE",
+  "tipo_documento": "XML_NFE",
+  "status": "PROCESSADO",
+  "dados": {
+    "numero_nota": "123",
+    "serie": "1",
+    "data_emissao": "2026-06-02T09:00:00-03:00",
+    "cnpj_emitente": "12345678000199",
+    "nome_emitente": "EMPRESA EXEMPLO LTDA",
+    "cnpj_destinatario": "98765432000188",
+    "nome_destinatario": "CLIENTE EXEMPLO LTDA",
+    "valor_total": "1500.00",
+    "chave_acesso": "33260612345678000199550010000001231000001234",
+    "produtos": []
+  }
+}
+```
+
+## Status sugeridos
+
+```txt
+PENDENTE
+PROCESSANDO
+PROCESSADO
+ERRO
+REPROCESSADO
+```
+
+## Diferenciais técnicos
+
+- Separação clara entre serviços, modelos, API e configuração.
+- Código preparado para ambientes locais, servidores e automações agendadas.
+- Pronto para rodar com cron, Docker, n8n ou workers assíncronos.
+- XPath robusto com suporte a XML com namespace.
+- Boas práticas de segurança para credenciais.
+- Modelo de banco documentado em `docs/database.sql`.
+
+## Roadmap
+
+- Controle de arquivos já processados.
+- Persistência real com PostgreSQL ou SQL Server.
+- Dashboard web de auditoria.
+- Upload do XML normalizado para Google Drive.
+- Logs persistentes por arquivo.
+- Fila assíncrona com Celery/RabbitMQ.
+- Docker Compose com API e banco.
+
+## Autor
+
+Desenvolvido por [Thiago Tavares](https://github.com/tavaresmirako).
